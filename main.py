@@ -12,6 +12,7 @@ class Ticket:
     _status: str
     _priority: str
     assigned_user: User | None = None
+    description: str | None = None
     
     def __post_init__(self) -> None:
         if self._status not in ['open', 'in_progress', 'closed']:
@@ -50,6 +51,7 @@ class Ticket:
         data['title'] = self.title
         data['status'] = self.status
         data['priority'] = self.priority
+        data['description'] = self.description
         if self.assigned_user:
             data['assigned_user'] = self.assigned_user.name 
         else:
@@ -63,12 +65,14 @@ class Ticket:
         status = data['status']
         priority = data['priority']
         
+        description = data.get("description")
+        
         if data['assigned_user'] is not None:
             assigned_user = User(data['assigned_user'])
         else:
             assigned_user = None
         
-        return cls(id, title, status, priority, assigned_user)
+        return cls(id, title, status, priority, assigned_user, description)
         
 class TicketNotFoundError(KeyError):
     pass
@@ -78,8 +82,8 @@ class TicketTracker:
         self.data: dict[int, Ticket] = {}
         self.ticket_id: int = 1
     
-    def create_ticket(self, title: str, priority: str) -> None:
-        self.data[self.ticket_id] = Ticket(self.ticket_id, title, "open", priority)
+    def create_ticket(self, title: str, priority: str, description = None) -> None:
+        self.data[self.ticket_id] = Ticket(self.ticket_id, title, "open", priority, None, description)
         self.ticket_id += 1
     
     def get_ticket(self, ticket_id: int) -> Ticket:
