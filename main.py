@@ -131,14 +131,3 @@ class TicketTracker:
         tracker.ticket_id = max_id
         
         return tracker
-    
-tracker = TicketTracker()
-tracker.create_ticket("bish", "high")
-tracker.create_ticket("bash", "low")
-user = User("Alex")
-tracker.assign_ticket(1, user)
-tracker.change_status(1, "in_progress")
-tracker.change_status(2, "closed")
-tracker.save("tickets.json")
-tracker2 = TicketTracker().load("tickets.json")
-print(tracker2.get_open_tickets())
